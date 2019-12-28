@@ -15,12 +15,6 @@
 			<groupId>com.alipay.sofa</groupId>
 			<artifactId>rpc-sofa-boot-starter</artifactId>
 		</dependency>
-		<!--平台包-->
-		<dependency>
-			<groupId>com.wish.plat</groupId>
-			<artifactId>plat-common</artifactId>
-			<version>${plat-common.version}</version>
-		</dependency>
 		<!--set get-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

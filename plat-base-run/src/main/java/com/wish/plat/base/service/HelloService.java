@@ -2,8 +2,6 @@ package com.wish.plat.base.service;
 
 import com.wish.plat.base.model.School;
 import com.wish.plat.base.model.Student;
-import com.wish.plat.common.PlatRequestBody;
-import com.wish.plat.common.PlatResponseBody;
 
 import javax.ws.rs.*;
 import java.io.File;
@@ -72,21 +70,6 @@ public interface HelloService {
     @Path("httpTest/sayHelloNestedObj")
     String sayHelloNestedObjH(Student student);
 
-    /**
-     * 按照标注的入参对象和返回定义一个接口，不提供rest服务
-     * @param requestBody
-     * @return
-     */
-    public PlatResponseBody standMethodSofa(PlatRequestBody requestBody);
-
-    /**
-     * 按照标注的入参对象和返回定义一个接口，提供rest服务
-     * @param requestBody
-     * @return
-     */
-    @POST
-    @Path("standMethodHttp")
-    public PlatResponseBody standMethodHttp(PlatRequestBody requestBody);
 
     @Path("uploadFile")
     String uploadFile( List<File> files );

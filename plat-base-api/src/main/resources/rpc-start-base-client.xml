@@ -12,32 +12,4 @@
             <sofa:route target-url="${wish.plat.base.url:127.0.0.1:12200}"/>
         </sofa:binding.bolt>
     </sofa:reference>
-    <!--部门-->
-    <sofa:reference id="orgServiceReference" interface="com.wish.plat.base.api.OrgService">
-        <sofa:binding.bolt>
-            <sofa:global-attrs timeout="3000" address-wait-time="2000"/>
-            <sofa:route target-url="${wish.plat.base.url:127.0.0.1:12200}"/>
-        </sofa:binding.bolt>
-    </sofa:reference>
-    <!--角色-->
-    <sofa:reference id="roleServiceReference" interface="com.wish.plat.base.api.RoleService">
-        <sofa:binding.bolt>
-            <sofa:global-attrs timeout="3000" address-wait-time="2000"/>
-            <sofa:route target-url="${wish.plat.base.url:127.0.0.1:12200}"/>
-        </sofa:binding.bolt>
-    </sofa:reference>
-    <!--基础服务公共函数接口-->
-    <sofa:reference id="ogPubfIReference" interface="com.wish.plat.base.api.OgPubfI">
-        <sofa:binding.bolt>
-            <sofa:global-attrs timeout="3000" address-wait-time="2000"/>
-            <sofa:route target-url="${wish.plat.base.url:127.0.0.1:12200}"/>
-        </sofa:binding.bolt>
-    </sofa:reference>
-    <!--菜单函数接口-->
-    <sofa:reference id="menuServiceReference" interface="com.wish.plat.base.api.MenuService">
-        <sofa:binding.bolt>
-            <sofa:global-attrs timeout="3000" address-wait-time="2000"/>
-            <sofa:route target-url="${wish.plat.base.url:127.0.0.1:12200}"/>
-        </sofa:binding.bolt>
-    </sofa:reference>
 </beans>
