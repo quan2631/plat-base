@@ -16,6 +16,10 @@ wish.plat.base.url=172.29.12.100:12201
 ```
 @ImportResource({"classpath*:rpc-start-base-client.xml"})
 ```  
+注：如果引入后bean无法注入，请检查此项或增加如下配置。
+```  
+@ComponentScan({"com.wish.plat.base.api.OperService","com.example.demo"})
+```  
 ## 4.启动工程，发起请求
 测试代码：
 ```
@@ -255,4 +259,100 @@ end thread Id:59
 August 30th 2019, 17:14:18.729	
 type:log-base @version:1 @timestamp:August 30th 2019, 17:14:18.729 message:[common:{"threadId":"17","businessDate":"2019-07-27","loginId":"123","channel":"WeiXin","cityId":"quanxin","systemTime":"2019-07-27:08:56:00"}] 
 2019-08-30 17:15:37,843 INFO HelloServiceImpl:25 -Server receive3: quanxin _id:V-vN4WwB8O1YgcWL1ZlV _type:doc _index:log-base-20190830 _score:
+```
+# D：如何使用SOFATracer及上报Zipkin
+## 1.使用须知
+```
+1.目前是傻瓜式应用，仅仅是单节点打印出TracerId
+2.真正的使用应该结合网关，多个服务，分别在不同机器上，打印出TraceId
+3.本次验证的只是：应用日志打印 traceId 和 spanId
+4.纯属个人立场，仅供交流
+```  
+## 2.如何使用
+### 2.1引入jar
+```
+<dependency>
+    <groupId>com.alipay.sofa</groupId>
+    <artifactId>tracer-sofa-boot-starter</artifactId>
+</dependency>
+<!--上报数据至 Zipkin-->
+<dependency>
+    <groupId>io.zipkin.zipkin2</groupId>
+    <artifactId>zipkin</artifactId>
+    <version>2.11.12</version>
+</dependency>
+<dependency>
+    <groupId>io.zipkin.reporter2</groupId>
+    <artifactId>zipkin-reporter</artifactId>
+    <version>2.7.13</version>
+</dependency>
+```
+### 2.2集成log4j2
+```
+value: "[%X{SOFA-TraceId},%X{SOFA-SpanId}] %d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L -%m%n"
+```
+参考：https://www.sofastack.tech/projects/sofa-tracer/print-traceid-spanid/
+### 2.3配置zipkin
+```
+  tracer:
+    zipkin:
+      enabled: true
+      baseUrl: http://yf009.intdev.hxyd.tech:9411
+```
+## 3.达到了什么效果
+```
+[ac1d1997157835721228410027876,0] 2020-01-07 08:33:32,388 INFO  HelloServiceImpl:26 -Server receive1: 123
+```
+参考：https://www.sofastack.tech/projects/sofa-tracer/report-to-zipkin/
+
+# E：两个实现类实现同一个接口（韩）
+## 1.使用须知
+```
+1.与韩老师交流时，对于此情况好奇，因此作出如下验证
+2.因为客户端引入的是接口类，并无实现类，因此客户端无法根据bean名称实例不同的实现类
+3.本次的结论：任意执行了其中一个实现类
+4.纯属个人立场，仅供交流
+```  
+## 2.如何进行验证
+### 2.1在接口工程定义接口
+```
+略
+```
+### 2.2在服务端实现接口
+```
+@Service
+@SofaService(bindings = {@SofaServiceBinding(bindingType = "rest"),@SofaServiceBinding(bindingType = "bolt")})
+public class OperServiceImpl implements OperService {
+    @Override
+    public String getOperListByOrg(String city_id, String org_code) {
+        return "123";
+    }
+}
+@Service
+@SofaService(bindings = {@SofaServiceBinding(bindingType = "rest"),@SofaServiceBinding(bindingType = "bolt")})
+public class OperServiceImpl2 implements OperService {
+    @Override
+    public String getOperListByOrg(String city_id, String org_code) {
+        return "456";
+    }
+}
+```
+### 2.3客户端使用
+```
+@RestController
+public class HelloController {
+
+    @Autowired
+    OperService OperService;
+
+    @RequestMapping("/1")
+    public String OperServiceImpl(){
+        return  OperService.getOperListByOrg("1","2");
+    }
+}
+```
+### 2.4验证结果
+```
+访问：http://localhost:8080/1
+返回：456
 ```
