@@ -356,3 +356,4 @@ public class HelloController {
 访问：http://localhost:8080/1
 返回：456
 ```
+注：本工程为服务端，测试的客户端见：https://github.com/quan2631/plat-base-api-client
